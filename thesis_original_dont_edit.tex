@@ -1,7 +1,7 @@
 % ******************************* PhD Thesis Template **************************
 % Please have a look at the README.md file for info on how to use the template
 
-\documentclass[a4paper,12pt,customfont,numbered,draft,index]{Classes/PhDThesisPSnPDF}
+\documentclass[a4paper,12pt,customfont,numbered,index]{Classes/PhDThesisPSnPDF}
 
 % ******************************************************************************
 % ******************************* Class Options ********************************
@@ -115,10 +115,11 @@
 
 \include{Chapter1/chapter1}
 \include{Chapter2/chapter2}
-\include{Chapter3/chapter3}
 \include{Chapter4/chapter4}
 \include{Chapter5/chapter5}
 \include{Chapter6/chapter6}
+\include{Chapter3/chapter3}
+\include{Summary/summary}
 \include{Chapter7/chapter7}
 
 
@@ -136,15 +137,15 @@
 
 %\bibliographystyle{apalike}
 %\bibliographystyle{unsrt} % Use for unsorted references  
-%\cleardoublepage
-%\bibliographystyleown{plainnat}
-%\bibliographown{References/references}
 
 
-\cleardoublepage
 \bibliographystyle{plainnat} % use this to have URLs listed in References
+\cleardoublepage
 \bibliography{References/references} % Path to your References.bib file
 
+%\bibliographystyleown{plainnat} % use this to have URLs listed in References
+%\cleardoublepage
+%\bibliographyown{References/references2} % Path to your References.bib file
 
 % If you would like to use BibLaTeX for your references, pass `custombib' as
 % an option in the document class. The location of 'reference.bib' should be
