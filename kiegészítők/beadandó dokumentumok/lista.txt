@@ -1,0 +1,3 @@
+Cikkek 3 példányban
+Az MTMT-bõl kinyomtatni a listát, miután regisztrálták Ádám cikkét
+A DOI_adatlap_16_12_12.pdf filet külön elküldeni mailben

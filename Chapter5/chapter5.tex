@@ -1,0 +1,205 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%****************************** Fifth Chapter **********************************
+%*******************************************************************************
+\chapter[The influence of disorder]{The influence of local disorder on
+strain localization and ductility of strain softening materials \hyperref[paper:A3]{[O2]}} \label{chapter:disorder}
+
+% **************************** Define Graphics Path **************************
+\ifpdf
+    \graphicspath{{Chapter4/Figs/Raster/}{Chapter5/Figs/PDF/}{Chapter5/Figs/}}
+\else
+    \graphicspath{{Chapter5/Figs/Vector/}{Chapter5/Figs/}}
+\fi
+
+In this study a model is proposed for the deformation of a locally disordered but macroscopically homogeneous material which shows softening during plastic deformation. A measure for the internal structural disorder is introduced and its role in strain localisation is investigated with respect to the formation of macroscopic shear bands in such materials. This study reveals the role of the heterogeneity in the suppression of strain localisation and on the extension of the plastic regime in the stress-strain curves.
+
+\section{Introduction} \label{sec:disorder_intro}
+
+Quite a feq materials undergo strain softening upon plastic deformation, that is, the load carrying capability of the material decreases. Strain softening often leads to formation of shear bands, when strain localises in the sample, making it locally even weaker. This positive feedback may lead finally to catastrophic failure. In case of localised deformation small macroscopic strain can also evoke failure if the width of the shear band is small compared to the specimen dimensions. When irreversible softening occurs after yield, stress-strain curves can also show the properties of brittle fracture even though the failure mode is inherently ductile. An illustrious example of this behaviour are metallic glasses \cite{ASHBY2006321,schuh2007mechanical} whose application is limited by the tendency to fail shortly after yield which is due to the formation of shear bands. In this case, softening mechanism is most likely linked to the shear-induced increase in free volume \cite{steif1982strain}, however, localised, adiabatic heating has been also proposed as an alternative source \cite{wright2001localized}.
+
+In favour of delaying the onset of the catastrophic shear localisation, which would enhance the ductility of metallic glasses, numerous strategies have been proposed. The main concept is to introduce some degree of heterogeneity on a microstructural level, e.g.\ a second interface phase \cite{adibi2013transition}, embedding nano-crystallites or isolated dendritic crystallites into a glassy matrix \cite{das2005work,hofmann2008designing,XU2016314}, pre-straining along a different deformation path \cite{zhou2014non,WU2015136}, or micro-alloying to increase atomic-scale disorder by introducing quasi-point defects\cite{qiao2016understanding}.
+
+Structural disorder is present in the vast majority of condensed matter. Not only metallic glasses, mentioned in the previous paragraph, but crystalline solids also exhibit microstructural disorder on a larger scale, but still well below the scale of a typical macroscopic specimen. On an orders of magnitude larger scale, metal foams also show structural disorder. One may ask how the macroscopic deformation behaviour is influenced by the microstructural disorder and length scales, which can vary from nanoscale (for metallic glasses) up to millimeters (for solid foams). Increasing microstructural heterogeneity may lead to increasing deformation homogeneity, as observed in compression tests of metallic foams\cite{ZAISER201338}.
+
+In this study a generic model is considered which accounts for heterogeneity and randomness in the material microstructure and microstructure evolution in conjunction with strain softening. The model is derived from the one used in section \ref{sec:weakest_SCPM_description}, which is based on previous scalar plasticity studies\cite{1742-5468-2005-08-P08004,ZAISER20061432}, origianally introduced for single slip deformation of crystals with disordered dislocation microstructure. The idea to use this model to investigate the growth of shear bands and the associated avalanches in amorphous materials is not new\cite{TALAMALI2012275,PhysRevE.88.062403,1742-5468-2015-2-P02011,PhysRevLett.103.065501}, but none of them included strain softening explicitly.
+
+In this chapter the model is introduced first, then the simulated deformation behaviour are presented for different microstructural disorder. A special emphasis will be put on the strain localisation process and its consequence on the stress-strain curve. It will be shown that increase in disorder delays strain localisation and thus leads to a remarkable increase in macroscopic ductility.
+
+\section{The stochastic continuum plasticity model}
+The model used throughout this chapter is based on the stochastic continuum plasticity model (SCPM) of chapter \ref{chapter:weakest_link}. Here I only summerise the differences compared to that model.
+
+The external stress ${\tau ^{{\rm{ext}}}}$ is controlled by remote displacements acting on the specimen which generates the total (plastic and elastic) shear strain ${\gamma ^{{\text{tot}}}}$, and the elastic strain is proportional to the total stress, which is only the external stress, as the average of the internal stress is zero by construction, therefore
+\begin{equation} \label{eq:disorder_gamma_pl}
+{\tau ^{{\text{ext}}}} =  \mu \left( {{\gamma ^{{\text{tot}}}} - {\gamma ^{{\text{pl}}}}} \right)\quad {\gamma ^{{\text{pl}}}} = \frac{1}{{{L^2}}}\sum\limits_{k,l = 1}^L {\gamma _{k,l}^{{\text{pl}}}},
+\end{equation}
+where $\mu$ is the shear modulus.
+
+Whenever the local stress in a cell $\left( {k,l} \right)$ exceeds the local threshold, i.e.\ \cref{eq:weakest_loc_equilibrium} is violated, plastic deformation occurs and at that cell $\gamma _{k,l}^{{\text{pl}}}$ is increased by
+
+\begin{equation} \label{eq:disorder_gamma_rule}
+\Delta \gamma _{k,l}^{{\text{pl}}} = \min \left( {\Delta {\gamma _0},C \cdot \Delta {\gamma _{k,l}}} \right)\quad C = \frac{{\tau _{k,l}^{{\text{int}}} + {\tau ^{{\text{ext}}}}}}{{\left| {{G_E}\left( {0,0} \right)} \right|}},
+\end{equation}
+where ${G_E}\left( {0,0} \right) =  - 2\mu /\left[ {\pi \left( {1 - \nu } \right)} \right]$ and $\nu$ is the Poisson's ratio. In agreement with the notations used before, $\tau _{k,l}^{{\rm{loc}}} = \tau _{k,l}^{{\mathop{\rm int}} } + {\tau ^{{\rm{ext}}}}$ is used\footnote{Here the type of force is noted in the upper index as the continuous spatial argument is now discrete and occupies the lower index.}. This specific choice of the plastic strain eliminates the local stress if the plastic strain required is not larger than ${\Delta {\gamma _0}}$. This ensures the dissipated energy $d{W^{{\text{diss}}}}$ to be positive, $d{W^{{\text{diss}}}} = \tau \Delta {\gamma ^{{\text{pl}}}} = {\mathbf{\sigma }} \cdot d{{\mathbf{\varepsilon }}^{{\text{pl}}}}$, but limits the largest allowed local plastic strain at the same time.
+
+The different local flow threshold values $\tau _{k,l}^{{\text{th}}}$ represent the structural disorder and their values are chosen independently from a Weibull distribution with shape parameter $\beta$ and mean value $\tau _0^{{\text{th}}}$ (as the cell size of the simulations supposed to be larger than the correlation distance of the microstructural heterogeneity), where larger $\beta$ implies smaller scatter of the local yield stresses, i.e.\ more homogeneous microstructure. At the beginning of the simulation at zero plastic strain $\tau _{k,l}^{{\text{th}}}$ values are assigned to all cells. Strain softening is handled on cell-level: after each local strain increment occurring at a site $\left( {k,l} \right)$, a new $\tau _{k,l}^{{\text{th}}}$ threshold value is assigned from the same Weibull distribution multiplied by a penalty factor $F\left( {\gamma _{k,l}^{{\text{pl}}}} \right) = 1 - f \cdot \gamma _{k,l}^{{\text{pl}}}$, where $f > 0$ is the softening parameter (or for strain hardening, $f < 0$).
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{weibull}
+\caption[Weibull distributions]{The probability density function of a Weibull distribution for $x>0$ is given by $P\left( x \right) = \frac{\beta }{\lambda }{\left( {\frac{x}{\lambda }} \right)^{\beta  - 1}} \cdot \exp \left( { - {{\left( {x/\lambda } \right)}^\beta }} \right)$, where $\lambda$ is called the scale parameter and $\beta$ is called the shape parameter. Four different Weibull distributions are plotted here with $\lambda$ = 1 scale parameter and different $\beta$ shape parameters. Their mean for shape values $\beta=1$,~$2$,~$4$~and~$8$ are $1$,~$0.89$,~$0.91$~and~$0.94$ approximately.}
+\label{fig:weibull_look_like}
+\end{figure}
+
+
+\subsection{Dimensionless units}
+Just as in the study on the role of the weakest links in chapter \ref{chapter:weakest_link}, this model can also be non-dimensionalised by measuring all appearing quantities in the units of the introduced quantities. Let's measure all stresses in the units of the mean flow threshold $\tau _0^{{\text{th}}}$, all strains in units of $\tau _0^{{\text{th}}}/\mu $ (the elastic strain needed to reach the mean flow threshold value) and the spatial coordinates in the units of the cell size $d$. Beside the Weibull shape parameter $\beta$, the model behaviour is then controlled by two numerical parameters. \begin{enumerate}
+\item $I = \left| {G_{0,0}^E} \right|\Delta {\gamma _0}/\tau _0^{{\text{th}}}$ (called 'coupling constant'), which controls, how much the stress in a cell is redistributed after an elementary plastic event, compared to the mean flow threshold value.
+\item The softening parameter $f$. It is worth to note that different softening protocols can also be imagined, e.g.\ an exponential softening, where the factor which multiply the probability variable (chosen from the Weibull distribution) has the form $F\left( {\gamma _{k,l}^{{\text{pl}}}} \right) = 1 - {c_1}{e^{\gamma _{k,l}^{{\text{pl}}}/{c_2}}}$ with appropriate parameters $c_1$ and $c_2$.
+\end{enumerate}
+
+In the following a simplifying assumption $\nu  = 0.353$ is made in which case the coupling constant $I = \mu \Delta {\gamma _0}/\tau _0^{{\text{th}}}$. The local stress reduction at the site of a deformation event with size $\Delta {\gamma _0}$ is then $I$ and the external stress reduction due to the same event is $I/L^2$.
+
+
+\subsection{Simulation protocol}
+The simulation protocol closely follows the one used in section \ref{sec:weakest_SCPM_description}. The two main differences are:
+\begin{enumerate}
+\item The external stress decreases during a plastic event according to \cref{eq:disorder_gamma_pl} while the total deformation is kept constant. In these simulations it is not the external stress, what is prescribed, but the total strain.
+\item The $\tau _{k,l}^{{\rm{th}}}$ flow threshold is multiplied by the factor $F\left( {\gamma _{k,l}^{{\text{pl}}}} \right)$. It is also a probability variable and its expected value is $F\left( {\gamma _{k,l}^{{\text{pl}}}} \right)$ times the original value ($\tau _0^{{\rm{th}}}$).
+\end{enumerate}
+This means that the simulation protocol is as follows. The initial flow threshold values are assigned to all sites according to the Weibull distribution with exponent $\beta$ and mean value $1$. The site with the lowest flow threshold is identified and the total strain ${\gamma ^{{\text{tot}}}}$ is increased till the external stress\footnote{which is equal to the total local stress in the beginning, when no inhomogeneous strain is present} according to \cref{eq:disorder_gamma_pl} reaches the flow threshold of that cell, triggering the first deformation event. The plastic deformation occurs instantaneously, modifies the internal stress (which is the Green's function convoluted with the plastic strain) and decreases the external stress, while ${\gamma ^{{\text{tot}}}}$ is kept constant. The new flow stress value is assigned to the affected cell, for which the same distribution is used, and then multiplied with the factor $F\left( {\gamma _{k,l}^{{\text{pl}}}} \right)$ (this decreases the expected value of the effective distribution in case of strain softening, $f>0$). After this the total acting stress may exceed the local flow threshold value for some other cells. If this is the case, the one with the highest surplus (smallest residual stress, according to \cref{eq:weakest_loc_equilibrium}, which is negative in case of instability) is identified and plastic strain is applied on that cell according to \cref{eq:disorder_gamma_rule}, thus implementing extremal dynamics. The loop is repeated until there are no more unstable sites, and the event called avalanche terminates. The plastic strain and stress at this point are evaluated and these data make up the whole stress-strain curve.
+
+Then again the site with the smallest residual stress is located and ${\gamma ^{{\text{tot}}}}$ is increased such a way that the concomitant external stress will be large enough to trigger that cell, which then starts the next avalanche. The loop triggering avalanches is repeated until the local strain of at least one site reaches the value $\gamma _{k,l}^{{\text{pl}}} = 1/f$. At this point the strength of that site becomes $0$, which is considered as a nucleation of a microcrack, leading to the failure of the system. The plastic strain required to achieve failure is denoted by $\gamma _{\rm{f}}^{{\text{pl}}}$ and depends not only on the parameters of the simulations but also on the initial distribution of the local flow threshold values. This means that a statistical approach is required in this study.
+
+\section{Results}
+Simulations for Weibull shape parameters $\beta  = 1$, $2$, $4$ and $8$, for coupling constants $I = 0.125$, $0.25$, $0.5$ and $1$, and for system sizes $L = 32$, $64$, $128$, $256$ and $512$ were performed. In each case $512$ simulations were performed. The realisations were differed in the initial state guaranteed by the probability distribution of the flow stress values. The softening parameter $f$ was taken to be $1/16$ for all simulations.
+
+\subsection{Stress-strain curves}
+The average stress-strain curves were calculated by averaging the external stress at a given total deformation over all the different realisations. The system failure occurred not at the same total deformation for every case. The averaging was performed only for those deformation values, which were below this failure threshold in each realisation. This means that the plotted stress-strain curves contain data of all realisations on its whole domain. Theobtained  stress-strain curves can be seen in Fig.~\ref{fig:disorder_stress_strain}.
+
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{linS_1_4_1000-1512_s_tsc_DsG}
+\caption[Stress-total strain curves of different disordered materials]{Averaged stress-total strain curves for two different yield-stress distributions (Weibull exponents $\beta=1$ and $\beta=4$) and different system sizes. Parameters of the simulations: ${\rm{number of simulations}} = 512$, $I=1$, $f=1/16$.}
+\label{fig:disorder_stress_strain}
+\end{figure}
+
+One can identify three different regions in Fig.~\ref{fig:disorder_stress_strain}.
+\begin{enumerate}
+\item An initial quasi-elastic loading region.
+\item A transition to a plastic deformation region, where the stress increases with strain (hardening). The previous and this region are system size independent.
+\item A transition to softening part, where the external stress decreases with the total strain. The simulations are terminated once a microcrack nucleation occurred, indicated by the $0$ flow stress at least one site. The corresponding failure strains $\gamma _{\text{f}}^{{\text{pl}}}$ are much smaller than what one would expect for a homogeneous system, $1/f$, meaning strong localisation in deformation. Contrary to the first regions, this one is system size dependent: the stress drop occurs more rapidly in larger systems, and system failure occurs earlier too, which means stronger deformation localisation in some sense. 
+\end{enumerate}
+
+In the upcoming sections the emerging deformation patterns are investigated first, and a measurement for strain localisation is introduced which characterises the strength of strain localisation. Finally, a simple model is introduced which gives an explanation for the localisation and system size dependence.
+
+\subsection{Patterns in the strain maps}
+The emerging strain patterns during the softening regime can be seen in Fig.~\ref{fig:disorder_strain_maps}. The left patterns show the plastic strain arrangement at the peak stress, before the onset of softening. In this stage deformation is macroscopically homogeneous, but mesoscale structures can be identified in the form of numerous weak shear bands in the $x$ and $y$ directions which are more pronounced at larger degree of disorder (smaller $\beta$ parameter). Note that the peak stress is reached at different total strain values, as for larger degree of disorder it is reached later, hence the mean value of the strain is larger.
+
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{loc-strain-maps-1-4-highest-stress-and-strain_mod}
+\caption[Strain patterns at peak stress and at failure]{Plastic strain patterns at the highest external stress, right before the onset of softening (left), and at the end of the simulation, at system failure (right). Parameters are: $\beta=1$ (top) and $\beta=4$ (bottom), $I=1$, $f=1/16$, $L=256$.}
+\label{fig:disorder_strain_maps}
+\end{figure}
+
+During the softening regime the patterns undergo a qualitative change, as most of the additional strain emerging during the softening regime is localised in a single shear band where the microcrack nucleation also takes place. This shear band is more visible and pronounced in the case with less disorder (larger $\beta$ values).
+
+The formation of localised shear band is in good agreement with the ideas of classical continuum mechanics, which predicts localisation to occur -- in a system without boundary constraints and under pure shear loading -- at the transition from strain hardening to strain softening regimes. A quantitative measurement for strain localisation is introduced in the following to describe this behaviour more precisely.
+
+\subsection{Deformation localisation}
+The spatial distribution of the incremental strain is investigated in order to quantify strain localisation. The averaged external stress-plastic strain curve is divided into $n=50$ equally large intervals, where the $k$th interval is defined by ${\gamma ^{{\text{pl}}}} \in \left[ {{\gamma ^{{\text{pl}}{\text{,}}k}},{\gamma ^{{\text{pl}}{\text{,}}k + 1}}} \right)$, where ${\gamma ^{{\text{pl}}{\text{,}}k}} = k \cdot \left\langle {\gamma _{\text{f}}^{{\text{pl}}}} \right\rangle /n$. The plastic strain increase occurring during strain interval $k$ at site $\left( {i,j} \right)$ is denoted by $\gamma _{i,j}^{{\text{pl}}{\text{,}}k}$.
+
+The following definition of localisation will exploit the observation that shear bands have a planar shape. A plane ${\mathcal{P}}$ is the set of all consecutive cells in the $x$ (or $y$) direction at a given $y$ (or $x$) value, counting $L$ number of cells. Considering planes in $x$ and $y$ directions, there are a total of $2 \cdot L$ different planes in a system. The $d_{i,j}^\mathcal{P}$ denotes the distance between site $\left( {i,j} \right)$ and a plane $\mathcal{P}$, for which $0 \le d_{i,j}^{\cal P} \le L/2$ due to the periodic boundary conditions. The strain-weighted average of $d_{i,j}^\mathcal{P}$ at the $k$th strain interval is denoted as $d_k^\mathcal{P}$ and calculated as 
+\begin{equation}
+d_k^\mathcal{P} = \frac{{\sum\limits_{i,j = 1}^L {\gamma _{i,j}^{{\text{pl,}}k} \cdot d_{i,j}^\mathcal{P}} }}{{\sum\limits_{i,j = 1}^L {\gamma _{i,j}^{{\text{pl,}}k}} }}.
+\end{equation}
+
+Let us take a short look on two special cases to better understand this definition.
+\begin{enumerate}
+\item \label{enum:disorder_case1} When all deformations occur at only one plane along $x$ at $y^*$, one would get $d_k^{\cal P} = d_{1,{y^*}}^{\cal P}$, because for all the cases when $\gamma _{i,j}^{{\rm{pl,}}k} \ne 0$, $d_{i,j}^{\cal P} = d_{i,{y^*}}^{\cal P}$. The first argument of the lower index of $d$ can be anything in the range $\left[ {1,L} \right]$.
+\item \label{enum:disorder_case2} For a completely homogeneous strain distribution one would get 
+\[d_k^\mathcal{P} = \frac{{\sum\limits_{i,j = 1}^L {c \cdot d_{i,j}^\mathcal{P}} }}{{\sum\limits_{i,j = 1}^L c }} = \frac{{\sum\limits_{i,j = 1}^L {d_{i,j}^\mathcal{P}} }}{{{L^2}}} = \frac{{L\left( {0 + 2 \cdot 1 + 2 \cdot 2 + ... + 2 \cdot \frac{L}{4}} \right)}}{{{L^2}}} = \frac{{2\frac{L}{2}\frac{L}{4}}}{L} = \frac{L}{4}\]
+for every plane $\mathcal{P}$.
+\end{enumerate}
+
+Then the plane is identified for which $d_k^{\cal P}$ is minimal, ${d_k} = \mathop {\min }\limits_{\cal P} \left( {d_k^{\cal P}} \right)$. In case \ref{enum:disorder_case1}, it would be the plane ${\mathcal{P}_{\min }} = \left\{ {\left( {x,{y^ * }} \right)|x \in \left[ {0,L} \right]} \right\}$, where all the deformations take place, and ${d_k} = d_{1,{y^ * }}^{{\mathcal{P}_{\min }}} = 0$. In case \ref{enum:disorder_case2}, ${d_k^{\cal P}}$ is the same for every plane, therefore ${d_k} = d_k^{\cal P} = L/4$.
+
+The localisation parameter $\eta$ at a given interval $k$ is then defined as 
+\begin{equation}
+{\eta _k} = 1 - \frac{4}{L} \cdot \mathop {\min }\limits_\mathcal{P} \left( {d_k^\mathcal{P}} \right),
+\end{equation}
+i.e.\ the plane, for which $d_k^\mathcal{P}$ is minimal, identified, and then transformed in such a way, that for the largest possible localisation (case \ref{enum:disorder_case1}, where $d_k^\mathcal{P} = 0$) the result is $1$, and for the smallest possible localisation (case \ref{enum:disorder_case2}, where ${d_k} = L/4$) the result is $0$.
+
+
+\begin{figure}[htbp!] 
+\centering
+\begin{subfigure}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{radius_and_ssc_256_DG_125_id}
+\caption{$I=0.125$}
+\end{subfigure}
+\begin{subfigure}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{radius_and_ssc_256_DG1_id}
+\caption{$I=1$}
+\end{subfigure}
+\caption[Stress-strain curves and strain localisation]{External stress-plastic strain curves and the strain evolution of the localisation parameter $\eta$ for different degrees of disorder (Weibull shape parameter $\beta=8$, $4$, $2$ and $1$. $f=1/16$, $L=256$)}
+\label{fig:disorder_strain_localisation}
+\end{figure}
+
+Fig.~\ref{fig:disorder_strain_localisation} shows, that in all simulations the localisation parameter $\eta$ starts from $\eta=0$ and then monotonously increases during the hardening regime. After the peak stress is reached and the system enters the macroscopic softening region, $\eta$ increases rapidly towards $\eta=1$, indicating that new plastic events occur in one single shear band. It can be also clearly seen, that the increasing degree of disorder -- even though it leads to larger plastic response and an earlier onset of plastic flow -- extends the hardening region to larger strains with higher external stress and delays the onset of deformation localisation. The value of the coupling constant $I$ can be varied in an order of a magnitude without seriously affecting the main picture, therefore its role in localisation is marginal.
+
+One can investigate the incremental strain around the final failure plane. In Fig.~\ref{fig:disorder_shear_band_evol} the profile of the shear bands for different values of the localisation parameter $\eta$ can be seen for larger disorder ($\beta=1$) and for smaller disorder ($\beta=8$). Note that the width of the bands are almost the same, but the localisation of deformation happens later in the case of larger disorder, although both curves compare situations with equal value of $\eta$. This phenomenon can only happen, if in the case of larger disorder, deformation first localises in general not on the final failure plane, and localisation on the final failure plane happens after larger deformation activity, which is spread out in the systemelsewhere than the final failure plane large strain has been already accumulated. In contrast, in case of small disorder, deformation localises on the final failure plane almost from the beginning of the softening region.
+
+\begin{figure}[htbp] 
+\centering
+\begin{subfigure}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{shearbandsW1}
+\caption{$\beta=1$}
+\end{subfigure}
+\begin{subfigure}[b]{0.45\textwidth}
+\includegraphics[width=\textwidth]{shearbandsW8}
+\caption{$\beta=8$}
+\end{subfigure}
+\caption[Evolution of deformation band]{Evolution of the distribution of plastic strain around the final failure plane for different Weibull shape parameters $\beta$ averaged over every simulation. $I=1$, $f=1/16$, $L=256$.}
+\label{fig:disorder_shear_band_evol}
+\end{figure}
+
+The measure of localisation $\eta$ used in this study characterises localisation with respect to a best-fit shear plane, and is a novel approach in this field, but has been used before to analyse strain localisation and failure processes in rock samples \cite{PhysRevE.90.052401}. This definition is quite different form other measures proposed in this field, in the sense that it can accunt for the spatial distribution of the deformation. A naive measure provided by the root-mean-square deviation of the local strain from the average plastic strain \cite{CHENG20093253} cannot distinguish between a single broader shear band and numerous, spatially scattered narrower -- either point-like --  shear bands which carry the same local strain. Such a measure effectively takes account for the magnitude of the scatter, but not for its spatial distribution. This distinction is central to our argument, i.e.\ large degree of small-scale microstructural heterogeneity prevents the emergence of heterogeneity on the large scale in the form of single macroscopic shear band, which would lead to system failure.
+
+\subsection{Mean strain to failure}
+It has been shown that disorder decreases strain localisation, but one may raise the question how it modifies the mean strain at failure, a more practical parameter that can be easily measured in experiments. Fig.~\ref{fig:disorder_mean_strain_system_size} shows that the strain required for system failure is system size dependent and decreases with increasing system size. This dependency is not surprising if we do the following approximations based on the previous observations. Let us consider the strain occurring during the hardening region to be homogeneous with magnitude ${\gamma _{\text{h}}}$, while all strain emerging during the subsequent softening regime is localised in one slip band with a finite width of $d$, depending weakly on the Weibull-shape parameter $\beta$ and let us also suppose that the shear band itself is homogeneous. In this case the mean strain at failure is
+\begin{equation} \label{eq:disorder_fit_curve}
+{\gamma _{\text{f}}} = {\gamma _{\text{h}}} + \left( {\gamma _{\text{f}}^{{\text{loc}}} - {\gamma _{\text{h}}}} \right) \cdot \left( {d/L} \right),
+\end{equation}
+where ${\gamma _{\text{f}}^{{\text{loc}}}}$ is the strain value which characterises the plastic strain value of the cells inside the shear band when the failure occurs. The parameters in \cref{eq:disorder_fit_curve} can be obtained by fitting a ${\gamma _{\text{f}}} = {c_1} + {c_2}/L$ function on the data measured, particularly ${\gamma _{\text{h}}} = {c_1}$, which is the failure strain in the infinite large system limit.
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{strain_to_failure_vs_system_size}
+\caption[Mean strain at failure - system size]{Mean strain at failure as a function of the system size for different Weibull parameters. A ${\gamma _{\text{f}}} = {c_1} + {c_2}/L$ function is fitted via $c_1$ and $c_2$ plotted with lines. $I=1$, $f=1/16$.}
+\label{fig:disorder_mean_strain_system_size}
+\end{figure}
+
+Fig.~\ref{fig:disorder_mean_strain_shape} shows the mean strain at failure as the function of the Weibull-shape parameter, for different system sizes, where values for the infinite large system limit come from the fitting of $c_1$ mentioned. It can be seen that larger microstructural disorder leads to an increase in ductility. The figure also shows that this effect is strongly pronounced in larger samples: the ratio of the main strain in the $\beta=1$ and $\beta=8$ cases are about $60$, while the corresponding variation coefficients are ${\sigma _{\beta  = 1}} = 1$ and ${\sigma _{\beta  = 8}} \approx 0.15$.
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{strain_to_failure_vs_shape}
+\caption[Mean strain at failure - Weibull shape]{Mean strain at failure as a function of the Weibull-shape parameter $\beta$, for different system sizes. The value for infinitely large system size is obtained from the fit curves in Fig.~\ref{fig:disorder_mean_strain_system_size}.}
+\label{fig:disorder_mean_strain_shape}
+\end{figure}
+
+\section{Summary}
+
+In this study the deformation and failure behaviour of  microstructurally disordered model materials are studied, which exhibit irreversible strain softening and fail by shear band formation. According to the intuitive idea increased microstructural heterogeneity may facilitate shear band nucleation and therefore may have a negative impact on deformability. The observed behaviour is just the opposite: a strong positive effect of increased heterogeneity and randomness on the deformation properties were found. Although the increased microstructural heterogeneity plays role in the earlier onset of plastic deformation in the form of diffuse shear bands -- which can be understood within the framework of classical weakest-link statistics \cite{ISPANOVITY20136234} --, but the same heterogeneity prevents the spreading of shear bands evolving into a system-wide macroscopic shear band leading to system failure. The earlier onset of deformation is coupled with an extended hardening regime, leading to the elimination of weak regions of the material. This hardening is only a survival-bias-hardening (in contrast with the explicitely defined softening), meaning that the weakest sites are eliminated and only stronger sites remain. This behaviour is more expressed when more sites can be considered very weak, which occurs in the case of larger scatter in the residual strength (i.e.\ larger disorder). After the hardening is exhausted, structural softening takes place and promotes macroscopic deformation localisation. The onset of strain localisation is close to the peak stress where the system enters the globally softening regime.
+
+According to this study, in microstructurally disordered materials, where ductility is limited by shear band formation, the increase of the degree of microstructural heterogeneity on the nanoscale may result both in an increase in strength and in a significant increase in ductility. These results match well with the ideas to increase the ductility of metallic glasses by introducing a second interface phase \cite{adibi2013transition} or by embedding nano-crystallites or isolated dendritic crystallites into a glassy matrix \cite{das2005work,hofmann2008designing}, which all result in an increase of the scatter of local deformation properties within a disordered microstructure. Until now, such ideas have been studied by some types of MD simulations, which also supported the concept, that introducing nanoscale heterogeneity can promote the nucleation of multiple shear bands which prevent catastrophich shear localisation in one single band \cite{PhysRevB.83.100202,PhysRevB.83.100202}. The drawback of MD simulations are their spatial and temporal scale limits, which makes it difficult to directly investigate strain localisation on a macroscopic level, however, they are suitable to parametrise mesoscopic models\cite{rodney2009distribution,rodney2011modeling,albaret2016mapping}, such as the present one. The highest potential in this study is to combine the model presented with MD simulations in order to obtain physically based parameters for the model of bulk metallic glasses as well as of nanoglasses and amorphous nanocomposite structures.
+
+It is important to note that this study does not investigate or promote the well established idea, that combining weak-but-ductile and strong-but-brittle materials into a composite may lead to a material carrying the desired strong-yet-ductile property.
+
+In this model different volume elements of different strength fail at the same local strain, and at system failure the similarity of the evolving macroscopic shear band are marginal between the weakly and strongly disordered materials (see Fig.~\ref{fig:disorder_shear_band_evol}). Nevertheless, the overall deformation behaviour is essentially different in both cases: larger disorder extends the hardening region with diffuse shear band formation which delays the coalescence of the local shear bands into one large catastrophic macroscopic shear band. It would be desirable to understand how fluctuations emerge and extend across scales, as done by other models similar to the one presented in this study, which demonstrate the emergence of scale-free, system-wide correlations in the internal stress and local strain patterns \cite{zaiser2006scale,1742-5468-2015-8-P08009}. Due to these correlations, the macroscopic properties of such materials cannot be deduced from local statistics (e.g.\ using only weakest-link arguments), nor can they be trivially originated from small, circumscribed representative volume element. It is shown in this study, that local fluctuations not only influence, but significantly modify the behaviour properties of macroscopic materials, which can be used to design materials with improved properties for which novel conceptual tools may be needed.
+
+\section*{Notes in regard to the thesis}
+The summary above clearly identifies for which material the model presented is suitable for and in which area it has its largest potential, namely for microstructurally disordered materials which undergo strain softening. Its highest potential lies in bulk metallic glasses, nanoglasses and amorphous nanocomposite structures. At the same time I would like to emphasize that the model is not restricted to non-crytalline materials, also mentioned at the introduction of this chapter in section \ref{sec:disorder_intro}. Strictly speaking, the model does not involve dislocations and dislocation motion since the resolution of this model is much above the scale of the mean dislocation spacing of crystalline materials, and neither the deformation mechanism used here lies on the theory of dislocations. However, different dislocation arrangements can lead to the different local yield threshold introduced in this model, dislocation motion can be also used to account for plastic strain and the stress field of the plastic event of the Eshelby's inclusion problem share the basis with the stress field of dislocations, therefore it is indisputable that the model of this study can be used to study the effect of dislocations in a larger scale in a stochastic manner. The fact, that the underlying numerical model lies elementary on the model introduced for crystalline materials \cite{1742-5468-2005-08-P08004} reinforced me to carry out this study in the framework of my thesis.

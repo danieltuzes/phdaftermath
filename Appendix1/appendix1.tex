@@ -1,0 +1,16 @@
+%!TEX root = ../thesis.tex
+% ******************************* Thesis Appendix A ****************************
+\chapter{Dimensionless units}\label{sec:dimensionless_units}
+In the case when dislocation cores can be considered pointlike (e.g.\ all the size scales are orders of magnitude larger), dislocation systems are invariant under the following scaling transformation:
+\begin{align}
+  {\mathbf{r}} \mapsto {\mathbf{r}}/c \hfill \\
+  \gamma  \mapsto c \cdot \gamma  \hfill \\
+  \tau  \mapsto c \cdot \tau,  \hfill \\ 
+\end{align}
+where $\mathbf{r}$ is the spatial coordinate, $\gamma$ is the plastic shear strain, and $\tau$ is the shear stress ($c>0$). This universal feature is a consequence of the $1/r$ type (scale-free) decay of the stress field of the dislocation. This also means that in an infinite dislocation system only one length scale can appear besides the size of the Burgers vector $b$, the mean dislocation distance $\rho^{-1/2}$, where $\rho$ is the average total dislocation density. We, therefore, introduce a dimensionless unit system by choosing $c=\rho^{-1/2}$ and divide all the quantities mentioned before with their corresponding natural material specific unit, 
+\begin{alignat}{2}
+  {\mathbf{r}}' =  & {\mathbf{r}}/{\rho ^{ - 1/2}} &&  = {\mathbf{r}}/{\rho ^{ - 1/2}} \\ 
+  \gamma ' =  & {\rho ^{ - 1/2}}\gamma /b &&  = \gamma /\left( {b{\rho ^{1/2}}} \right) \\ 
+  \tau ' =  & {\rho ^{ - 1/2}} \cdot \tau /\left( {\frac{{\mu b}}{{2\pi \left( {1 - \nu } \right)}}} \right) & & = \tau / \left( {\frac{{\mu b{\rho ^{1/2}}}}{{2\pi \left( {1 - \nu } \right)}}} \right), 
+\end{alignat}
+where $\mu$ is the shear modulus, $\nu$ is the Poisson ratio. At many parts of this thesis, these dimensionless units are used. This interesting and useful principle is elaborated in the work of \citet{0965-0393-22-6-065012}.

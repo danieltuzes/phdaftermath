@@ -1,0 +1,216 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%****************************** Sixth Chapter **********************************
+%*******************************************************************************
+\chapter[Dislocation patterning]{Dislocation pattern formation in a stochastic single slip model \hyperref[paper:A4]{[O3]}} \label{chapter:pattern}
+
+% **************************** Define Graphics Path **************************
+\ifpdf
+    \graphicspath{{Chapter6/Figs/Raster/}{Chapter6/Figs/PDF/}{Chapter6/Figs/}}
+\else
+    \graphicspath{{Chapter6/Figs/Vector/}{Chapter6/Figs/}}
+\fi
+
+In this study, in order to investigate the formation of dislocation patterns, a model for dislocation transport is introduced. The theory proposed connects the formation of dislocation patterns to the dynamics of the driven dislocation system which tries to minimize the internal energy in the presence of a state dependent, friction-like flow stress. The approach throw a new light upon the old "energetic vs. dynamic" controversy regarding the physical origin of dislocation patterns. The mechanism is introduced in the simplest case, i.e.\ in plane strain, single slip, which demonstrate the required minimal conditions for pattern formation and the robustness of the model. This latter is emphasised by another implementation of the model whose results are also presented for comparison. In these two models the same driving stresses have been taken into account but the models differ in the description of dislocation transport. The model I implemented assumes spatially and temporally discrete transport of discrete "packets" of dislocation density driven by extremal dynamics, therefore called stochastic cellular automaton model, while the other model uses continuous time and space resolution and assumes that the dislocation velocity depends linearly on the acting local stress, and called hydrodynamic model. Despite the elemental differences of the models the emergent patterns in both models are mutually consistent and in good agreement with the prediction of the results of the linear stability analysis applied on the continuum model.
+
+\section{Introduction}
+
+Even the earliest TEM\nomenclature[z-TEM]{TEM}{transmission electron microscope} micrographs showed that the distribution of dislocations is hardly ever homogeneous in deformed crystals, they tend to form structures where dislocation density can raise by multiple orders of magnitude in a distance smaller than the mean dislocation spacing. Even though the properties of an individual dislocation with its environment is well understood on a theoretical level, the same does not hold for the patterns they form. Numerous models aimed to reveal the properties of dislocation pattern formation. Most of them are based on analogy with other pattern formation observed in physical systems. It has been argued that dislocation patterns can be understood as minimisers of some kind of energy functional, but even the mathematical formulation of such pictures led to intellectual exhaustion. In a remarkable exception, a work of \citet{holt1970dislocation} an approach similar to spinodal decomposition were used, where dislocation densities minimalise an associated internal energy functional but the model introduced could not handle the fact that dislocation patterns are stable not only in the presence but in the absence of external stress too. What is common in all energetic approach is that they envisage the deforming crystal with dislocations as a system far from equilibrium and assume that pattern formation may lead to energy dissipation. These concepts led to a set of coupled partial differential equation for dislocation densities \cite{WalgraefAifantisJournal,pontes2006dislocation} producing patterns full of delights for the eye but only some of the resemble dislocation patterns have been observed on TEM micrographs, while others, such as spiral waves have never been observed\cite{salazar1995dislocation}. All of these models aimed to describe pattern formation by introducing 
+interaction forces in a phenomenological way in addition to the well understood elementary interactions between a single dislocation and its environment, therefore left the question open whether dislocation patterning is an energetic or dynamic phenomenon\cite{nabarro2000complementary}.
+
+Over the past years studies have been introduced which consider dislocation density (densities) as key quantity and deduce the dynamic equations of dislocation densities from the equation of motion of discrete dislocations in a systematic manner based upon averaging procedures. The kinematics of dislocations has been formulated for 2D and later for 3D too\cite{hochrainer2007three,hochrainer2014continuum,hochrainer2015multipole}
+ applying two approaches.
+ \begin{enumerate}
+ \item Direct averaging of the interaction forces of discrete dislocations\cite{Groma_2003_AM,valdenaire2016density,PhysRevB.93.214110}.
+ \item Formulating an energy functional governing the dynamics of the dislocation system from phenomenological considerations\cite{groma2007dynamics,PhysRevLett.114.015503} or from direct averaging the elastic energy of discrete dislocation system \cite{PhysRevB.92.174120} and then obtaining the driving forces using thermodynamical principles\cite{HOCHRAINER201612}.
+ \end{enumerate}
+In contrary to the former attempts of describing dislocation patterns mentioned earlier, the focus in these models is not on pattern modelling, i.e.\ reproducing the patterns observed but to model dislocations and their collective properties in a continuum framework. What indicates the effectiveness of these models is that the dynamic equations of dislocation densities in the CDD model deduced faithfully from the discrete level leads to the emergence of heterogeneous dislocation pattern formation.
+
+Simulating pattern formation and its evolution in 3D multiple slip system would be important, and the advances in computation power\cite{Xia_2015_MSMSE} or kinematic averaging methods\cite{sandfeld2015pattern} sure do provide the possibility to do so, the aim presented in this study is to elucidate the role of the model parameters and the influences of dynamic and energetic mechanisms on pattern formation only in 2D single slip system, seems t be an oversimplification. With this choice, however, an exact representation of the kinematics becomes possible and both for the energy functional \cite{groma2007dynamics,PhysRevB.92.174120} and for the effective mobility law\cite{PhysRevB.93.214110} well-defined forms can be established. In the 2D model one does not need phenomenological assumptions. A complete understanding of the combined role of energy minimisation, external force and  friction stress is obtained. In the previous work of \citet{PhysRevB.93.214110} linear stability analysis on the evolving dislocation densities has been performed leading to the important conclusions on the early stages of patterning mechanism but it can hardly provide further details on the stability and robustness of the emergent patterns. This study firmly extends the scope of previous work to the nonlinear regime and investigate the robustness of the evolving patterns by comparing two elementary different implementation. The robustness is illustrated with further scenarios in the paper embracing all the results\hyperref[paper:A4]{O3} which is the fourth paper included in this thesis.
+
+This study is organised as follows: in the next section \ref{sec:pattern_models} the two simulations models used are introduced. The first model in \ref{sec:pattern_models_det} is the continuum one based on the work of \citet{PhysRevB.93.214110} which implements a spatially and temporal continuous model. The second model in \ref{sec:pattern_models_stoch} is the stochastic one essentially developed and managed by me. It implements a spatially and temporally discrete and stochastic model which considers the same stresses as the continuum model but uses completely different dynamics. Results of the latter model is presented and compared with the former for similar cases, and with the results of the linear stability analysis. The study ends with the discussion on the robustness of dislocation patterning in section \ref{sec:pattern_conclusion}.
+
+\section{Simulation models} \label{sec:pattern_models}
+In this section the two different models are introduced in details. Both consider the same stresses but implements dislocation transport in a rather different way.
+
+The system considered in both cases contains only straight edge dislocations of the two types in a single slip system with only conservative motion (dislocation climb is not allowed, dislocation motion happens only in the slip plane). The dislocations behave as quasi-particles in 2D, which is, without loss of generality, taken to be in the $xy$ plane, the slip planes taken to be the $xz$ planes with Burgers vectors ${\mathbf{b}} = \left( {b,0,0} \right)$ and $-{\mathbf{b}} = \left( {-b,0,0} \right)$. In our case, it is the $y$ dislocation coordinate which cannot change. The system size in both cases is limited, but toroidal boundary conditions are used to eliminate the effect of the boundary.
+
+
+\subsection{Deterministic continuum model} \label{sec:pattern_models_det}
+The deterministic continuum model is a direct and straightforward implementation of the 2D CDD model\cite{Groma_2003_AM,valdenaire2016density,PhysRevB.93.214110} explained earlier.
+
+\subsubsection{Transport equations} \label{sec:pattern_hydro}
+The dislocation densities must obey continuity equations. The sign convention according to which the positive dislocation density ${\rho ^ + }$ moves to the positive direction of $x$ with velocity ${v^ + }$ under positive resolved shear stress, and negative dislocation densities ${\rho ^ - }$ moves with velocity ${v^ - }$ is used. With these notations the time derivative of the shear strain $\gamma$ can be expressed as 
+
+\[{\partial _t}\gamma  = b\left( {{\rho ^ + }{v^ + } - {\rho ^ - }{v^ - }} \right).\]
+In case there is no source term of dislocation densities, the system conserves the dislocation density and the continuity equations 
+\[\begin{aligned}
+  {\partial _t}{\rho ^ + }\left( {{\mathbf{r}},t} \right) =   -  & {\partial _x}\left( {{\rho ^ + }{v^ + }} \right) \\ 
+  {\partial _t}{\rho ^ - }\left( {{\mathbf{r}},t} \right) =   - & {\partial _x}\left( {{\rho ^ - }{v^ - }} \right) \\ 
+\end{aligned} \]
+hold, where 
+\begin{equation}
+\begin{aligned} \label{eq:pattern_speed}
+  {v^ + }\left( {{\mathbf{r}},t} \right) = & + {M_0}b{\tau ^ + }\left( {{\mathbf{r}},t} \right) \hfill \\
+  {v^ - }\left( {{\mathbf{r}},t} \right) = & - {M_0}b{\tau ^ - }\left( {{\mathbf{r}},t} \right),
+\end{aligned}
+\end{equation}
+in which ${\tau ^+ }$ and ${\tau ^- }$ are effective shear stresses driving the positive and negative dislocations with mobility coefficient $M_0$. The velocities are proportional to the acting effective forces $b \tau^+ $ or $b \tau ^-$ (i.e.\ the effective glide components of the Peach-Koehler forces), as it can be seen from \cref{eq:pattern_speed}.
+
+\subsubsection{Evaluation of the effective driving stresses}
+
+The effective driving stresses result from the combination of the sign-dependent local driving stresses acting on the positive (or negative) dislocation density $\tau _{\text{d}}^ + $ (or $\tau _{\text{d}}^ - $)\footnote{Here "d" denotes "driving", while in a previous section at \ref{sec:disloc_sim_LDA}, "d" denoted "diffusion". Here, "diffusion" will be denoted by "diff".} and the friction-like stress $\tau _{\text{f}}^ + $ (or $\tau _{\text{f}}^ - $) as
+
+\begin{equation} \label{eq:pattern_effective}
+\begin{aligned}
+{\tau ^ + }\left( {\tau _{\text{d}}^ + ,\tau _{\text{f}}^ + } \right) = & \tau _{\text{d}}^ +  \cdot \left| {\tau _{\text{d}}^ + } \right| - \tau _{\text{f}}^ + \begin{cases}
+  \tau _{\text{d}}^ +  - \operatorname{sgn} \left( {\tau _{\text{d}}^ + } \right) \cdot \tau _{\text{f}}^ +, & {\text{if }}\left| {\tau _{\text{d}}^ + } \right| > \tau _{\text{f}}^ +  \\ 
+  0, & {\text{if }}\left| {\tau _{\text{d}}^ + } \right| \leqslant \tau _{\text{f}}^ + , 
+\end{cases} \\
+{\tau ^ - }\left( {\tau _{\text{d}}^ - ,\tau _{\text{f}}^ - } \right) = & \tau _{\text{d}}^ -  \cdot \left| {\tau _{\text{d}}^ - } \right| - \tau _{\text{f}}^ - \begin{cases}
+  \tau _{\text{d}}^ -  - \operatorname{sgn} \left( {\tau _{\text{d}}^ - } \right) \cdot \tau _{\text{f}}^ -, & {\text{if }}\left| {\tau _{\text{d}}^ - } \right| > \tau _{\text{f}}^ -  \\ 
+  0, & {\text{if }}\left| {\tau _{\text{d}}^ - } \right| \leqslant \tau _{\text{f}}^ -  .
+\end{cases}
+\end{aligned}
+\end{equation}
+
+The driving stresses written in these equations are given by combinations of the spatially homogeneous shear stress ${\tau _{{\text{ext}}}}$ coming from the remotely applied boundary displacement providing the plastic flow and the dislocation-dislocation interaction forces of the continuum level.
+
+\begin{equation}
+\begin{aligned}
+  \tau _{\text{d}}^ +  = {\tau _{{\text{ext}}}} + {\tau _{\text{sc} }} + {\tau _{{\text{back}}}} + {\tau _{{\text{diff}}}} \hfill \\
+  \tau _{\text{d}}^ -  = {\tau _{{\text{ext}}}} + {\tau _{\text{sc} }} + {\tau _{{\text{back}}}} - {\tau _{{\text{diff}}}}
+\end{aligned}
+\end{equation}
+
+The role and explanation of the different stress terms can be find in section \ref{sec:EOM_LDA} and in the work of \citet{PhysRevB.93.214110}.
+
+\subsection{Stochastic continuum model} \label{sec:pattern_models_stoch}
+In the second model the same forces are taken into consideration but dislocation transport is implemented in an essentially different way.
+
+The space is discretised on a square lattice of size $L \times L = N \cdot d \times N \cdot d$, where the size of a cell is $d$ and its edges are aligned in the $x$ and $y$ directions and a spatial bijection of $\left( {x,y} \right) \mapsto \left( {i = x/d,j = y/d} \right)$ is also made. Dislocation densities are considered to be constant inside the lattice cells and quantised in the units of ${\rho _{\text{d}}} = {\rho _0}/\left( {2M} \right)$ called dislocatom ("d" for discrete), where $M$ is a chosen parameter describing the fineness of the quantisation. The dislocation state of a lattice cell $\left( {i,j} \right)$ is then given by the number of positive and negative dislocatoms, $\rho _{i,j}^ +  = n_{i,j}^ + {\rho _{\text{d}}}$ and $\rho _{i,j}^ -  = n_{i,j}^ - {\rho _{\text{d}}}$. No dislocation source terms are introduced, just as in the previous model, i.e.\ $\sum\nolimits_{i,j} {n_{i,j}^ + } $ and $\sum\nolimits_{i,j} {n_{i,j}^ - } $ are considered constant separately.
+
+Time is propagated in discrete steps and just as in the deterministic continuum model, the spatial distribution of the dislocation densities are updated. Since all dependent and independent variables are represented with integers, the system defined describes a cellular automaton for which the rule of iteration steps gives the dynamics of the system.
+
+\subsubsection{Cellular automaton dynamics}
+The motion of dislocations is accomplished by exchanging dislocatoms between the neighboring cells in the first, $i$ index. Motion of positive and negative dislocatoms are determined by the same effective driving stress $\tau _{\text{d}}^ + $ and $\tau _{\text{d}}^ - $, but this time defined only at the border of $x$-adjoint cells and during the calculations it is assumed that all dislocatoms are concentrated in the middle of the cells, therefore there is a shift of $d/2$ between the place of dislocatatoms and the force acting on them. For the sake of simplicity the boundary between cells $\left( {i,j} \right)$ and $\left( {i+1,j} \right)$ will be denoted as $\left( {i,j} \right)$. Dislocatoms are moved under the following protocol:
+
+\begin{enumerate}
+\item The boundary is determined where the largest the absolute value of the effective driving stress is, i.e.\ the value $\mathop {\max }\limits_{i,j,s} \left| {\tau _{i,j}^s} \right|$ is identified and denoted by $\left| {\tau _{{i_m},{j_m}}^{{s_m}}} \right|$. If $\left| {\tau _{{i_m},{j_m}}^{{s_m}}} \right| > 0\left( { \Leftrightarrow \exists \left( {i,j,s} \right):\left| {\tau _{i,j}^s} \right| > 0} \right)$, then one dislocatom will be moved between cell $\left( {i,j} \right)$ and $\left( {i+1,j} \right)$ of dislocation type $s_m$. The four possibilities are:
+\begin{itemize}
+\item $\tau _{{i_m},{j_m}}^{{s_m}} > 0,{s_m} \in \left\{  +  \right\} \Rightarrow $ a positive dislocatom will be moved from $\left( {i,j} \right)$ to $\left( {i+1,j} \right)$,
+\item $\tau _{{i_m},{j_m}}^{{s_m}} < 0,{s_m} \in \left\{  +  \right\} \Rightarrow $ a positive dislocatom will be moved from $\left( {i+1,j} \right)$ to $\left( {i,j} \right)$,
+\item $\tau _{{i_m},{j_m}}^{{s_m}} > 0,{s_m} \in \left\{  -  \right\} \Rightarrow $ a negative dislocatom will be moved from $\left( {i+1,j} \right)$ to $\left( {i,j} \right)$0,
+\item $\tau _{{i_m},{j_m}}^{{s_m}} < 0,{s_m} \in \left\{  -  \right\} \Rightarrow $ a negative dislocatom will be moved from $\left( {i,j} \right)$ to $\left( {i+1,j} \right)$.
+\end{itemize}
+With other words, dislocatom of sign $s_m$ is moved on the boundary $\left( {i,j} \right)$ in the direction of ${s_m}\operatorname{sgn} \left( {\tau _{{i_m},{j_m}}^{{s_m}}} \right)$.
+\item Cases are excluded when there is no available dislocatoms to move, i.e.\ the lookup in the maximum value restricted to those cells where motion is allowed by available dislocatoms.
+\item The movement of a dislocatom through a boundary changes the strain at $\left( {i,j} \right)$ by $\operatorname{sgn} \left( {\tau _{{i_m},{j_m}}^{{s_m}}} \right) \cdot {\rho _{\text{d}}}bd$, i.e.\ the motion of a positive [or negative] dislocatom to the positive [or negative] direction (in case of positive effective stress) leads to an increase of the local strain, while the motion of a positive [or negative] dislocatom to the negative [or positive] direction (in case of negative effective stress) leads to a decrease of the local strain.
+\item After a dislocatom has been moved, all densities and stresses are recalculated and the next critical boundary is identified.
+\end{enumerate}
+
+With the rules above one implements an extremal dynamics for which a good example would be a strongly nonlinear dependence of the dislocation velocity on the driving effective stress like in $v\left( \tau  \right) \sim {\tau ^\beta }$, $\beta \gg 1$. In such a case the ratio of the velocity of two different dislocations where the ratio of the effective driven stress is $c$ is given by $v\left( {c \cdot \tau } \right)/v\left( \tau  \right) = {c^\beta }$. In a CA model one can keep the displacement in the order of the spatial resolution, $v\left( {c \cdot \tau } \right) \cdot \Delta t = d$, which suppresses the motion of the slower dislocations and therefore $v\left( \tau  \right) \cdot \Delta t/d \ll 1$ becomes negligible, resulting that effectively only one dislocation, which has the largest effective driving stress,  moves at a time. This dynamics is in strong contrast with the hydrodynamical one described in the previous section \ref{sec:pattern_hydro}, where all dislocations with nonzero effective stress are moving.
+
+\subsubsection{Stress calculation}
+The effective driving stresses $\tau _{i,j}^ + $ and $\tau _{i,j}^ - $ are calculated basically the same way as before with some minor changes due to the discretisation and an exception of the friction stress. The total and signed (excess) dislocation densities are calculated as ${\rho _{i,j}} = {\rho _{\text{d}}}\left( {n_{i,j}^ +  + n_{i,j}^ - } \right)$ and ${\kappa _{i,j}} = {\rho _{\text{d}}}\left( {n_{i,j}^ +  - n_{i,j}^ - } \right)$, respectively. The external stress is spatially constant. The calculation of the internal stress is based on \cref{eq:disloc_int_force} with a change of the integration to summation. The back and diffusion stresses are calculated according to \cref{eq:back_stress,eq:diff_stress}, where the derivation operator acts as a discrete operator, ${\partial _x}f\left( {i,j} \right) = \left[ {f\left( {i + 1,j} \right) - f\left( {i,j} \right)} \right]/d$. The most important change is on the calculation of the friction stress. It is calculated as
+\begin{equation}\label{eq:pattern_friction_stoch}
+\begin{aligned}
+\tau _{{\rm{f;}}i,j}^ +  = \alpha \mu b\sqrt {\frac{{{\rho _{i,j}} + {\rho _{i + 1,j}}}}{2}} \left( {1 - \frac{{{\kappa _{i,j}} + {\kappa _{i + 1,j}}}}{{{\rho _{i,j}} + {\rho _{i + 1,j}}}}} \right) \cdot \xi _{i,j}^ + ,\\
+\tau _{{\rm{f;}}i,j}^ -  = \alpha \mu b\sqrt {\frac{{{\rho _{i,j}} + {\rho _{i + 1,j}}}}{2}} \left( {1 + \frac{{{\kappa _{i,j}} + {\kappa _{i + 1,j}}}}{{{\rho _{i,j}} + {\rho _{i + 1,j}}}}} \right) \cdot \xi _{i,j}^ - ,
+\end{aligned}
+\end{equation}
+where ${\xi _{i,j}}$ is a random variable of mean value $1$ and standard deviation ${\sigma _\tau }$. Since there is no theoretical prediction for the actual form of the propbaility distribution of $\xi_{i,j}$, we have to select on a phenomenlogical ground. Although argumentation to use a power-law distribution, e.g Weibull-distribution, can be found\hyperref[paper:A2]{O1}, in this study a Gaussian-distribution is used. The number $\xi _{i,j}^ + $ or $\xi _{i,j}^ - $ is regenerated whenever a dislocation moves across the border $\left( {i,j} \right)$. The random factor $\xi_{i,j}$ accounts for the stress fluctuation inside a cell arising from the actual local configuration of the discrete dislocations\cite{1742-5468-2005-08-P08004}. With a choice of ${\sigma _\tau } = 0$, \cref{eq:pattern_friction_stoch} becomes the straightforward counterpart of the hydrodynamical case.
+
+\subsection{Initial conditions, loading protocol}
+${N^2} \cdot M/2$ number of positive and the same amount of negative dislocatoms were distributed initially in an uncorrelated manner.
+
+Two different types of loading protocol were investigated:
+\begin{enumerate}
+\item Constant external was applied right from the very beginning.
+\item $0$ external stress was applied at the beginning of the simulation and after an initial relaxation, the stress was increased quasi-statically, i.e.\ after each stress increment all the dislocatoms which felt effective driving force, moved according to the simulation protocol. This loading scheme produces a stress-strain curve with a horizontal asymptote representing the macroscopic flow stress.  
+\end{enumerate}
+It is shown that except the initial relaxation region, the two loading protocol lead to the same event sequence, therefore no change in the patterning behaviour is found.
+
+\section{Results}
+\subsection{Prediction from linear stability analysis}
+Linear stability analysis on the coupled partial differential equations of the dislocation densities was performed in the work of \citet{PhysRevB.93.214110}. To compare the results obtained in this study of strongly nonlinear models, a brief summary of the analysis is presented.
+
+Let us start with a spatially homogeneous dislocation system, ${\rho ^ + }\left( {\mathbf{r}} \right) = {\rho ^ - }\left( {\mathbf{r}} \right) = \rho /2$ and $\kappa \left( {\mathbf{r}} \right) = 0$. This is a solution for any ${\tau _{{\text{ext}}}}$. Then a perturbation is applied around this state and the linear response of the system is investigated, i.e.\ the higher order terms are neglected. Due to the general scaling invariance properties of dislocation systems (as noted in appendix \ref{sec:dimensionless_units}), the results obtained can be expressed in a universal way, where all dislocation densities are measured in the units of ${C_\rho } = {\rho _0}$, all lengths in the units of ${C_t} = \rho _0^{1/2}$, all times in the units of ${C_t} = {\left( {{M_0}\mu {b^2}{\rho _0}} \right)^{ - 1}}$, all stresses in the units of ${C_\tau } = \mu b\sqrt \rho  $, and all strains in the units of ${C_\gamma } = b\sqrt \rho  $. If not noted otherwise, these units are used in the following.
+
+The results of the linear stability analysis are:
+\begin{enumerate}
+\item If the external stress is below the flow stress (${\tau _{{\text{ext}}}} \leqslant \alpha $), the perturbation dies out exponentially, i.e.\ no plastic flow occurs and the dislocation microstructure remains the same.
+\item Above the flow stress, the growth rates of fluctuations at different wave vector is:
+\[\begin{aligned}
+  {\Lambda ^ \pm }\left( {\mathbf{k}} \right) =  &  - \frac{{\left( {A + D} \right)k_x^2 + T\left( {\mathbf{k}} \right)}}{2} \\ 
+   &  \pm \frac{{\sqrt {{{\left[ {\left( {A + D} \right)k_x^2 + T\left( {\mathbf{k}} \right)} \right]}^2} - 4k_x^2\left[ {A\left( {Dk_x^2 + T\left( {\mathbf{k}} \right)} \right) - B} \right]} }}{2}, \\ 
+\end{aligned} \]
+where 
+\[\begin{aligned}
+  B =  & {\tau _{{\text{ext}}}}\left[ {\left( {3/2} \right)\alpha  - {\tau _{{\text{ext}}}}} \right], \\ 
+  T\left( {\mathbf{k}} \right) =  & \frac{1}{{\pi \left( {1 - \nu } \right)}}\frac{{k_x^2k_y^2}}{{{k^4}}}. \\ 
+\end{aligned} \]
+For those ${\mathbf{k}}$, where
+\[A\left( {Dk_x^2 + T\left( {\mathbf{k}} \right)} \right) - B < 0,\]
+the perturbation increases and the highest amplification is expected at ${{\mathbf{k}}_{\max }}$, at the maximum of ${\Lambda ^ + }\left( {\mathbf{k}} \right)$, which is at
+\begin{equation} \label{eq:pattern_kmax}
+{k_{\max ,x}} = \rho _0^{1/2}{\left[ {2B\frac{{ - 1 + \sqrt {1 + \frac{{{{\left( {A - D} \right)}^2}}}{{4AD}}} }}{{{{\left( {A - D} \right)}^2}}}} \right]^{1/2}}
+\end{equation}
+and $k_{\max ,y} = 0$.
+\end{enumerate}
+
+\subsection[Simulations of the stochastic model]{Simulations of the stochastic cellular automaton model}
+
+Simulations with the stochastic cellular automaton model were performed using a quasi-static stress load protocol described in section \ref{sec:pattern_models_stoch}, and the dislocatom size has been chosen to $M=16$. The emerging patterns in the excess dislocation density can be seen on Fig.~\ref{fig:pattern_kappa_evolution_SCA} for one realisation. The figure shows the borning patters of alternating positive and negative exceed dislocations as the strain increased. As a comparison, the emerging total $\rho$ and excess $\kappa$ dislocation density patterns for the deterministic model is shown in Fig.~\ref{fig:pattern_kappa_evolution_DCM}.
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{kappa_direct_space_AD=0_1_small_dislocatom}
+\caption[$\kappa$ evolution in the stochastic model]{Spatio-temporal evolution of the excess dislocation density $\kappa$ in the direct space for the stochastic cellular automaton model in the units of the $\rho_0 = M\cdot \rho_{\rm{d}}$. Parameters: $A=D=0.1$, $\alpha=0.3$, $M=16$.}
+\label{fig:pattern_kappa_evolution_SCA}
+\end{figure}
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{fig4b}
+\caption[$\kappa$, $\rho$ evolution in the deterministic model]{Spatio-temporal evolution of the excess $\kappa$ (lower half of each subfig) and total $\rho$ (upper half of each subfig) dislocation density in the direct space for the deterministic continuum model in the units of $\rho_0$. Parameters: $A=0.5$, $D=0.4$, $\alpha=0.3$, ${\tau _{{\text{ext}}}} = 1.1\alpha $, the initial noise is Gaussian.}
+\label{fig:pattern_kappa_evolution_DCM}
+\end{figure}
+
+The Fourier transform of the evolving pattern at different strain values has been calculated for each individual realisation and averaged. Fig.~\ref{fig:pattern_kappa_evolution_SCA_fourier} demonstrates that the dominant wavelength of the patterns obtained are shifted to wavelengths larger (smaller $k_x$ values) than expected from the stability analysis. This may result from the short-wavelength noise explicitely added to the model, appearing on the scale of the size of a cell.
+
+In the direct space, another effect of the stochastic dynamics can be seen in the final pattern developed. It should be noted that in the Fourier space an average has been done over the various initial conditions, in the direct space it is not possible, because averaging in the direct space would wash out any type of pattern as topologically all space points are identical and different realisations are independent from each other. To obtain a smooth pattern in the direct space is not possible, because it is the feature of the dynamics, however, by refining the mesh of the stochastic cellular automaton and reducing the dislocatom size accordingly, one can reduce the noise as well and the dynamics would approaches those of the deterministic continuum model.
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{fig9s.pdf}
+\caption[Fourier transform of $\kappa$, stochastic model]{Spatio-temporal evolution of the excess dislocation density $\kappa$ in the Fourier space for the stochastic cellular automaton model and the prediction of the LSA (upper left corner). Parameters: $A=D=0.1$, $\alpha=0.3$, $M=16$.}
+\label{fig:pattern_kappa_evolution_SCA_fourier}
+\end{figure}
+
+
+The wavelengths $\lambda$, which characterise the patterns at the largest strain are obtained from Fig.~\ref{fig:pattern_kappa_evolution_SCA_fourier} by determining the the value ${k_{\max ,x}^ * }$, for which ${\left\langle {\left| {\tilde \kappa \left( {k_{\max ,x}^ * ,\left\langle \gamma  \right\rangle } \right)} \right|} \right\rangle _{{\text{ens}}}}$ is the largest, where $\tilde \kappa \left( {{k_x},{k_y}} \right)$ is the Fourier transform of the exceed dislocation density.
+Fig.~\ref{fig:pattern_wavelength_plot} shows that the wavelength $\lambda$ of the fully developed patterns increases with increasing $A$ and $D$ parameters, in agreement with the LSA. However, especially at larger $A$ and $D$ values, the values for $\lambda$ are noticeably larger in the stochastic cellular automaton model than what excepted from LSA, which is attributed to our opinion to the extremal dynamics and stochastic behaviour.
+
+\begin{figure}[htbp!] 
+\centering    
+\includegraphics[width=0.6\textwidth]{fig3}
+\caption[Pattern wavelengths comparison]{Patterm wavelength $\lambda$ as function of the model parameters $A$ and $D$. Green squares: $D=0.5$ and $A$ is the independent variable; green circle: $A=0.5$ and $D$ is the independent variable; blue stars: $A=D$; solid lines: prediction from the local density approximation for the fixed $A$ or $D$ case (green) and for the $A=D$ case. Note that the expression \cref{eq:pattern_kmax} is symmetric for $A$ and $D$.}
+\label{fig:pattern_wavelength_plot}
+\end{figure}
+
+
+Simulations with constant external stress, instead of the quasi-statical loading protocol, were performed and resulted in identical results with respect to the pattern formation. This behaviour is expected as, aside from the different and in our case, marginal initial relaxation, the sequence of events remains the same. This means that in this model the characteristic wavelength of the emerging pattern is stress independent. As a consequence, regardless the actual value of the external stress, the fully developed patterns match the ones obtained from the deterministic continuum model in the ${\tau _{{\text{ext}}}} \to 1$ limit, i.e.\ when the excess external stress is just above the flow stress and the deformatin rate is practically zero ($\dot \gamma  = 0$). This case is relevant, because the rate dependent contribution of the flow stress to the patterning is marginal. Using Cu as an example, where ${M_0} \approx 2 \cdot {10^{14}}{\text{ P}}{{\text{a}}^{ - 1}}{{\text{s}}^{ - 1}}$ \cite{kubin1992modelling} and $b = 2.52 \cdot {10^{ - 10}}{\text{ m}}$ and assuming a dislocation density of ${\rho _0} = {10^{12}}{{\text{ m}}^{ - 2}}$ and a typical strain rate ${10^{ - 3}}{{\text{ s}}^{ - 1}}$, requires a stress in the order of $1{\text{ Pa}}$, which is about $7$ orders of magnitude smaller then the typical level of the dislocation-dislocation interaction stresses. Therefore the deviation of the applied stress from the value ${\tau _{{\text{ext}}}} = 1$ is marginal.
+
+\section{Conclusion} \label{sec:pattern_conclusion}
+In this study a strongly nonlinear models for dislocation patterning were introduced where the fully developed patterns closely match the predictions obtained from a linear stability analysis on the equations of the continuum model. Two different implementations were investigated. One of them assumes linear dependence of the dislocation motion in the external stress (deterministic continuum model), while the other one supposes extremal dynamics where only one dislocation (package), with the highest effective stress, is moved (stochastic cellular automaton). Although the patterns slightly depend on the dynamical rules describing the dislocation motion, the results are qualitatively similar. Patterning goes along with hardening in both models, as evidenced in the stochastic cellular automaton model by an increase in stress during quasi-static loading protocol. In essence, a quasi-static balance of the different stress contributions governs the final patterns, which keep the dislocations in a meta-stable configuration and not by moving them between stable configurations. This picture provides some idea why dislocation patterns are similar along various materials with different crystal structures.
+
+Dislocation pattern formation depends on the interplay of three different types of forces appearing in the continuum theory and all of them needed for the formation. Without external stress no plastic strain occurs, so dislocation pattern formation cannot happen. The other type of forces are the interaction kernel of dislocations represented by the ${\tau _{{\text{sc}}}}$, ${\tau _{{\text{back}}}}$ and ${\tau _{{\text{diffusion}}}}$ stresses, which can be derived from an energy functional covering elastic and defect energy contributions. These terms play the most important role in the structure of the patterns and determines mainly the characteristic wavelength of the patterns. In particular, the wall-like structure is predicated by the shape of the interaction kernel ${\tau _{\text{sc} }}$, as its minimisation forces the emergent walls being perpendicular to the slip plane. The stresses ${\tau _{{\text{back}}}}$ and ${\tau _{{\text{diffusion}}}}$ controls the wavelength of the pattern, in which the parameters $D$ and $A$ tune the contributions of the gradient of the exceed (also known as signed) and total dislocation density to the energy functional. The study reveals that internal energy related  stress contributions alone does not explain pattern formation, as the process crucially depends on the third type of stress, the friction stress. The basic mechanism leading to dislocation patterning originates from the fact, that in a location of increased dislocation density the friction stress is also increased, and this positive feedback leads to dislocation density instability. This is exactly the patterning scenario described by \citet{nabarro2000complementary} and called "dynamic" patterning. Nevertheless without accounting for the energetic stress contributions, the pattern wavelength and pattern morphology would remain unexplained.
+
+As a final words of this study, I would like to highlight the conclusion that most of the earlier discussion on dislocation patterning may have based upon misleading analogies and false dichotomies. Dislocation patterns are not dynamic-dissipative structures and their formation are not solely driven by energy minimisation. The system indeed attempts to minimise a coarse grained energy functional driven by external stress but the system stuck into a local energy minima at every step which on the coarse grained scale appears as friction stress. This duality cannot be observed in spinodal decomposition or in dynamic chemical waves, therefore they cannot serve as analogies. What could serve as an exemplary picture is the ripples on sand dunes. There, airflow over the sand surface and the turbulence serves the external driving force, while the system tries to minimise the gravitational potential energy and the complex friction of the granular material are the key mechanism that may lead to the instability of a smooth sand surface in favor of a ripple formation\cite{kok2012physics}.
+
+\section*{Notes in regard to the thesis}
+Ever since I had gotten involved into dislocation simulations I had been always interested in the duality of dislocation properties in the terms of long-rangeness. It is gladsome that my interest coincided with my possibilities to study dislocation avalanches and I was also excited to read the paper of \citet{PhysRevB.93.214110} after which I tried to find simulations where dislocation patterning arise. Due to the lack of simulations, where approximations and simplifications are controlled, I proposed my supervisor István Groma to develop a model to investigate pattern formation -- even beyond LSA -- based on that paper. A couple of weeks later my second supervisor Péter Ispánovity revealed his program code running a CA simulation of the very same CDD model based on the paper mentioned. I forked his code and rewrote it completely: simplified where it was possible, corrected some minor bugs, restructured it and implemented numerous new features. This helped me to point out that this model does show dislocation patterning with a specific parameter-set. Due to the weak visibility of the patterns in the direct space I implemented the Fourier-averaging method to convince other members of our research group that patterns do arise and stable far beyond the linear regime in that CDD model, which led to a joint research work with Michael Zaiser and his PhD student, Ronghai Wu.
+
+The previous CA model described in the study at chapter \ref{chapter:weakest_link} uses the self-consistent field-approximation (see \ref{sec:disloc_sim_self_consistent}), even though it is well-known, that such an approximation leads to properties never observed experimentally. But the model reproduces dislocation avalanches and in good agreement with DDD simulations in the small plastic regime and that is the reason why it has been used. In this chapter this model is extended with further stress terms based on strict physical consideration in a hope for a more complete description of dislocation motion which has the potential -- according to LSA -- of dislocation pattern formation but also inherited the stochastic properties entailing dislocation avalanche phenomena. Investigating dislocation avalanches in a local-density-approximation-based CDD model is a promising and interesting installment of this study but it was out of the scope of the current thesis.
+
